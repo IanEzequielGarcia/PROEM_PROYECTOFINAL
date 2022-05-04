@@ -1,0 +1,77 @@
+﻿@model ItemFacturaViewModel
+@using PROEM_PROYECTOFINALMVC.Models;
+@{
+    ViewData["Title"] = "Create";
+    IEnumerable<Cliente> clientes = ViewData["Clientes"] as IEnumerable<Cliente>;
+}
+
+<h1>Create</h1>
+
+<h4>Facturas</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" >
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Factura.Fecha" class="control-label"></label>
+                <input asp-for="Factura.Fecha" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label>Cliente</label>
+                <select asp-for="Factura.IdCliente" id="ClienteId" name="ClienteId">
+                @foreach(Cliente cliente in clientes)
+                {
+                    <option value="@cliente.Codigo">@cliente.Nombre</option>
+                }
+                </select>
+                @if(ViewBag.editar!=null)
+                {
+                    <input asp-for="Factura.Numero" hidden value="@Model.Factura.Numero">
+                    <input asp-for="Factura.IdCliente" hidden value="@Model.Factura.IdCliente">
+                }
+                <br />
+
+                <div class="form-group"> 
+                <h4>Item</h4>
+                <br />
+                    <table>
+                        <tr>
+                            <td>Descripcion</td>
+                            <td>Cantidad</td>
+                            <td>Precio</td>
+                        </tr>
+                            @for(var i=0;i<Model.Items.Count;i++)
+                            {
+                                <tr>
+                                    <input asp-for="@Model.Items[i].Codigo" hidden></input>
+                                    <td><input asp-for="@Model.Items[i].Descripcion"></input></td>
+                                    <td><input asp-for="@Model.Items[i].Cantidad"></input></td>
+                                    <td><input asp-for="@Model.Items[i].Precio"></input></td>
+                                </tr>
+                            }
+                        <tr>
+                            <td><input asp-for="Item.Descripcion" value=" "></input></td>
+                            <td><input asp-for="Item.Cantidad" value="0"></input></td>
+                            <td><input asp-for="Item.Precio" value="0"></input></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <br />
+             </div>
+
+            <div class="form-group">
+                <input type="submit" value="Agregar" asp-action="agregar"/>
+                <input type="submit" value="Guardar" asp-action="Create" class="btn btn-primary"/>
+            </div>
+        </form>
+    </div>
+    <div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
